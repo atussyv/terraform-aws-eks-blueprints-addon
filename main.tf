@@ -1,5 +1,20 @@
 locals {
   namespace = try(coalesce(var.namespace, "default")) # Need to explicitly set default for use with IRSA
+
+  values_map = try(yamldecode(var.values), {})
+  
+  set_wo_values = [
+    for path, value in flatten({
+      for key, val in local.values_map : key => (
+        tobool(can(tomap(val))) ?
+        { for k, v in val : "${key}.${k}" => v } :
+        { (key) = val }
+      )
+    }) : {
+      name  = path
+      value = tostring(value)
+    }
+  ]
 }
 
 ################################################################################
@@ -16,7 +31,7 @@ resource "helm_release" "this" {
   chart            = var.chart
   version          = var.chart_version # conflicts with reserved keyword
   repository       = var.repository
-  values           = var.values
+  set_wo           = local.set_wo_values
 
   timeout                    = var.timeout
   repository_key_file        = var.repository_key_file
