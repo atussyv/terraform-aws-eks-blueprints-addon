@@ -66,6 +66,7 @@ variable "values" {
   description = "List of values in raw yaml to pass to helm. Values will be merged, in order, as Helm does with multiple `-f` options"
   type        = list(string)
   default     = null
+  ephemeral   = true
 }
 
 variable "timeout" {
@@ -234,6 +235,8 @@ variable "set_sensitive" {
   description = "Value block with custom sensitive values to be merged with the values yaml that won't be exposed in the plan's diff"
   type        = any
   default     = []
+  sensitive   = true
+  ephemeral   = true
 }
 
 variable "set_irsa_names" {
