@@ -234,6 +234,7 @@ variable "set_sensitive" {
   description = "Value block with custom sensitive values to be merged with the values yaml that won't be exposed in the plan's diff"
   type        = any
   default     = []
+  ephemeral   = true
 }
 
 variable "set_irsa_names" {
