@@ -66,6 +66,7 @@ variable "values" {
   description = "List of values in raw yaml to pass to helm. Values will be merged, in order, as Helm does with multiple `-f` options"
   type        = list(string)
   default     = null
+  ephemeral   = true
 }
 
 variable "timeout" {
